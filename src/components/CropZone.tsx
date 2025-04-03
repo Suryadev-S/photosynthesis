@@ -2,7 +2,7 @@
 
 import Cropper, { ReactCropperElement } from "react-cropper";
 import "cropperjs/dist/cropper.css";
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useRef, } from "react";
 import { Button } from "./ui/button";
 
 interface ICropZone {
@@ -12,7 +12,6 @@ interface ICropZone {
 
 const CropZone = ({ imageSource, setCroppedImage }: ICropZone) => {
     const cropperRef = useRef<ReactCropperElement>(null);
-    const [imageAspectRatio, setImageAspectRatio] = useState(1);
 
     // Dynamically set the aspect ratio after the image loads
 
