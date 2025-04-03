@@ -3,10 +3,13 @@
 import { Sender } from "@/app/actions";
 import { useDropzone } from "react-dropzone";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 const DragDropUploader = () => {
     const router = useRouter();
+    const [uploading, setUploading] = useState(false);
     const uploadFile = async (file: File) => {
+        setUploading(true); // Show uploading indicator
         const formData = new FormData();
         formData.append("image", file);
         try {
@@ -21,6 +24,8 @@ const DragDropUploader = () => {
         } catch (error) {
             console.error("Upload error:", error);
             alert("Error uploading file.");
+        } finally {
+            setUploading(false); // Hide uploading indicator
         }
     };
 
@@ -32,16 +37,27 @@ const DragDropUploader = () => {
         },
         accept: { "image/*": [] }, // Accept only images
         multiple: false, // Allow only one file
+        disabled: uploading, // Disable dropzone while uploading
     });
 
     return (
-        <div {...getRootProps()} className="border-2 border-zinc-500 border-dashed p-6 rounded-lg text-center cursor-pointer text-zinc-300">
-            <input {...getInputProps()} />
-            {isDragActive ? (
-                <p>Drop the image here...</p>
-            ) : (
-                <p>Drag & drop an image here, or click to select</p>
-            )}
+        <div>
+
+            <div {...getRootProps()} className="border-2 border-zinc-500 border-dashed p-6 rounded-lg text-center cursor-pointer text-zinc-300">
+                <input {...getInputProps()} />
+                {isDragActive ? (
+                    <p>Drop the image here...</p>
+                ) : (
+                    <p>Drag & drop an image here, or click to select</p>
+                )}
+            </div>
+            {/* Uploading Indicator */}
+            {uploading &&
+                <div className="mt-4 text-center flex justify-center items-center gap-2 text-zinc-300">
+                    <span className="animate-spin border-4 border-t-transparent border-white rounded-full w-6 h-6"></span>
+                    <p>Uploading...</p>
+                </div>
+            }
         </div>
     );
 };
