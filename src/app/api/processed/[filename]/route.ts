@@ -15,7 +15,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ file
             },
         });
     } catch (error) {
-        console.log("error");
+        console.log(error);
         return NextResponse.json("error", { status: 500 });
     }
 }
