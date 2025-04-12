@@ -14,8 +14,8 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ file
                 'Content-Type': `image/${ext}`, // Adjust MIME type as needed
             },
         });
-    } catch (error) {
-        console.log(error);
+    } catch (_error) {
+        console.log(_error);
         return NextResponse.json("error", { status: 500 });
     }
 }
