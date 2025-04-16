@@ -1,6 +1,7 @@
 'use client'
 
 import { Sender } from "@/app/actions";
+import { upload } from '@vercel/blob/client';
 import { useDropzone } from "react-dropzone";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -29,10 +30,29 @@ const DragDropUploader = () => {
         }
     };
 
+    const storeUpload = async (file: File) => {
+        setUploading(true);
+        try {
+            const blob = await upload(file.name, file, {
+                access: 'public',
+                handleUploadUrl: '/api/toStore',
+            });
+            if (blob.url) {
+                router.push('/test')
+            }
+        } catch (error) {
+            console.error(error);
+            alert('error while uploading to store');
+        } finally {
+            setUploading(false);
+        }
+    }
+
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
         onDrop: (acceptedFiles: File[]) => {
             if (acceptedFiles.length > 0) {
-                uploadFile(acceptedFiles[0]); // Upload the first file
+                // uploadFile(acceptedFiles[0]); 
+                storeUpload(acceptedFiles[0]);
             }
         },
         accept: { "image/*": [] }, // Accept only images
