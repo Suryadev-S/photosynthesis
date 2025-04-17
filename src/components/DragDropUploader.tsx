@@ -1,6 +1,5 @@
 'use client'
 
-import { Sender } from "@/app/actions";
 import { upload } from '@vercel/blob/client';
 import { useDropzone } from "react-dropzone";
 import { useRouter } from "next/navigation";
@@ -9,26 +8,6 @@ import { useState } from "react";
 const DragDropUploader = () => {
     const router = useRouter();
     const [uploading, setUploading] = useState(false);
-    const uploadFile = async (file: File) => {
-        setUploading(true); // Show uploading indicator
-        const formData = new FormData();
-        formData.append("image", file);
-        try {
-            const response = await Sender(formData);
-
-            if (response.success) {
-                router.push(`/photo/${response.imageName}`)
-            } else {
-                throw new Error(response.error);
-            }
-
-        } catch (error) {
-            console.error("Upload error:", error);
-            alert("Error uploading file.");
-        } finally {
-            setUploading(false); // Hide uploading indicator
-        }
-    };
 
     const storeUpload = async (file: File) => {
         setUploading(true);
@@ -38,7 +17,7 @@ const DragDropUploader = () => {
                 handleUploadUrl: '/api/toStore',
             });
             if (blob.url) {
-                router.push('/test')
+                router.push(`/photo/${blob.pathname}`);
             }
         } catch (error) {
             console.error(error);

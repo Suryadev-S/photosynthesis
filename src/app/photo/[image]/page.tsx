@@ -2,12 +2,7 @@
 
 import CropZone from "@/components/CropZone";
 import { use, useState } from "react";
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select"
 import { Button } from "@/components/ui/button";
 import { Processor } from "@/app/actions";
@@ -18,6 +13,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Slider } from "@/components/ui/slider";
 import Link from "next/link";
 import { toast } from "sonner";
+import { baseURL } from "@/constants";
 
 const formSchema = z.object({
     format: z.enum(['jpeg', 'png', 'webp']),
@@ -65,7 +61,7 @@ const Page = ({ params }: { params: Promise<{ image: string }> }) => {
             <section className="w-4/5 mx-auto">
                 <h1 className="text-2xl my-4 md:text-3xl">CropZone</h1>
                 <CropZone
-                    imageSource={`http://localhost:3000/api/uploads/${image}`}
+                    imageSource={`${baseURL.storeBaseUrl}/${image}`}
                     setCroppedImage={setCroppedImage}
                 />
 

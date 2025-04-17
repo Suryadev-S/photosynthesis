@@ -1,6 +1,6 @@
 'use server'
 
-import { writeFile } from "fs/promises";
+import { put } from "@vercel/blob";
 import path from "path";
 import sharp from "sharp";
 
@@ -26,32 +26,10 @@ export const Processor = async (formData: FormData) => {
     if (format === "png") sharpInstance = sharpInstance.png({ quality });
     if (format === "webp") sharpInstance = sharpInstance.webp({ quality });
 
-    await sharpInstance.toFile(outputPath);
+    const blob = await put(`processed/${outputName}`, sharpInstance, {
+        access: 'public',
+    });
 
-    return { message: 'image processed', imgSrc: `http://localhost:3000/api/processed/${outputName}` };
+    return { message: 'image processed', imgSrc: blob.downloadUrl };
 }
 
-export const Sender = async (formData: FormData) => {
-    const imageFile = formData.get('image') as File;
-    const format = imageFile.type.split('/')[1];
-
-    if (!imageFile) return { error: 'no file uploaded' };
-
-    // console.log(imageFile.type.split('/')[1]);
-
-    //read the image buffer
-    const imageBuffer = Buffer.from(await imageFile.arrayBuffer());
-
-    //resolve the destination path
-    const outputName = `upload_${Date.now()}.${format}`;
-    const outputPath = path.join(process.cwd(), 'uploads', outputName);
-
-    //write the file to destination path
-    await writeFile(outputPath, imageBuffer);
-
-    return {
-        success: 'file send successfully',
-        imgSrc: `http://localhost:3000/api/uploads/${outputName}`,
-        imageName: outputName
-    }
-}
